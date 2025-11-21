@@ -1,0 +1,9 @@
+{
+  "name": "google-ads-analyst",
+  "version": "1.0.0",
+  "description": "Claude Code Plugin for Google Ads Analyst Skill - enables natural language queries for Google Ads data using MCC GAQL",
+  "author": "mhuang74",
+  "repository": "https://github.com/mhuang74/googleads-analyst-plugin",
+  "hooks": "../hooks/hooks.json",
+  "skills": ["../skills/google-ads-analyst"]
+}
