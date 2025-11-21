@@ -1,0 +1,3 @@
+[submodule "skills/google-ads-analyst"]
+	path = skills/google-ads-analyst
+	url = https://github.com/mhuang74/googleads-analyst-skill

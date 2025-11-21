@@ -1,0 +1,13 @@
+{
+  "hooks": [
+    {
+      "matcher": "SessionStart",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash $PLUGIN_DIR/scripts/install-mcc-gaql.sh"
+        }
+      ]
+    }
+  ]
+}
