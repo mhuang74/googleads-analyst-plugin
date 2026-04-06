@@ -13,8 +13,8 @@ claude plugin install https://github.com/mhuang74/googleads-analyst-plugin
 ### What Gets Installed
 
 - **Skills**: Google Ads Analyst skill with reference documentation
-- **Hooks**: SessionStart hook that automatically installs the `mcc-gaql` binary
-- **Binary**: `mcc-gaql` v0.13.0 (downloaded to `~/.local/bin/`)
+- **Hooks**: SessionStart hook that automatically installs the `mcc-gaql` and `mcc-gaql-gen` binaries
+- **Binaries**: Latest release of `mcc-gaql` and `mcc-gaql-gen` (downloaded to `~/.local/bin/`)
 
 ## Setup
 
@@ -33,6 +33,11 @@ Once installed and configured, you can use natural language to query your Google
 - "Show me the top performing campaigns this month"
 - "What's the CTR trend for my search campaigns?"
 - "Compare cost per conversion across ad groups"
+
+### Tools
+
+- **`mcc-gaql`**: Execute GAQL queries and validate query syntax
+- **`mcc-gaql-gen`**: Generate GAQL from natural language prompts
 
 ## Supported Platforms
 
