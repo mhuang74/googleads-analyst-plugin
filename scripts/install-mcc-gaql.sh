@@ -1,18 +1,11 @@
 #!/bin/bash
-# Install script for mcc-gaql binary
+# Install script for mcc-gaql and mcc-gaql-gen binaries
 # This script is triggered by SessionStart hook
 
 set -e
 
-MCC_GAQL_VERSION="v0.13.0"
+REPO="mhuang74/mcc-gaql-rs"
 INSTALL_DIR="$HOME/.local/bin"
-BINARY_NAME="mcc-gaql"
-BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
-
-# Check if already installed
-if [ -f "$BINARY_PATH" ]; then
-    exit 0
-fi
 
 # Detect OS and architecture
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -28,58 +21,92 @@ case "$ARCH" in
         ;;
     *)
         echo "Unsupported architecture: $ARCH"
-        echo "Please install mcc-gaql manually from: https://github.com/mhuang74/mcc_gaql/releases"
+        echo "Please install manually from: https://github.com/${REPO}/releases"
         exit 1
         ;;
 esac
 
-# Map OS names and set download URL
+# Map OS names for URL
 case "$OS" in
     darwin)
-        if [ "$ARCH" = "aarch64" ]; then
-            DOWNLOAD_URL="https://github.com/mhuang74/mcc_gaql/releases/download/${MCC_GAQL_VERSION}/mcc-gaql-aarch64-apple-darwin.tar.gz"
-        else
-            DOWNLOAD_URL="https://github.com/mhuang74/mcc_gaql/releases/download/${MCC_GAQL_VERSION}/mcc-gaql-x86_64-apple-darwin.tar.gz"
-        fi
+        OS_URL="macos"
         ;;
     linux)
-        if [ "$ARCH" = "x86_64" ]; then
-            DOWNLOAD_URL="https://github.com/mhuang74/mcc_gaql/releases/download/${MCC_GAQL_VERSION}/mcc-gaql-x86_64-unknown-linux-gnu.tar.gz"
-        else
-            echo "Unsupported Linux architecture: $ARCH"
-            echo "Please install mcc-gaql manually from: https://github.com/mhuang74/mcc_gaql/releases"
-            exit 1
-        fi
+        OS_URL="linux"
         ;;
     *)
         echo "Unsupported OS: $OS"
-        echo "Please install mcc-gaql manually from: https://github.com/mhuang74/mcc_gaql/releases"
+        echo "Please install manually from: https://github.com/${REPO}/releases"
         exit 1
         ;;
 esac
+
+# Fetch latest release tag from GitHub API
+LATEST_TAG=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+
+if [ -z "$LATEST_TAG" ]; then
+    echo "Failed to fetch latest release information from GitHub API"
+    echo "Please install manually from: https://github.com/${REPO}/releases"
+    exit 1
+fi
+
+# Strip 'v' prefix for filename
+VERSION_NO_V="${LATEST_TAG#v}"
+
+# Build download URL
+DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${LATEST_TAG}/mcc-gaql-${VERSION_NO_V}-${OS_URL}-${ARCH}.tar.gz"
+
+# Check if binaries are already installed and up to date
+MCC_GAQL_PATH="$INSTALL_DIR/mcc-gaql"
+MCC_GAQL_GEN_PATH="$INSTALL_DIR/mcc-gaql-gen"
+
+if [ -f "$MCC_GAQL_PATH" ] && [ -f "$MCC_GAQL_GEN_PATH" ]; then
+    # Check if current version matches latest
+    CURRENT_VERSION=$($MCC_GAQL_PATH --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+    if [ "$CURRENT_VERSION" = "$VERSION_NO_V" ]; then
+        exit 0
+    fi
+fi
 
 # Create install directory if needed
 mkdir -p "$INSTALL_DIR"
 
 # Download and extract
-echo "Installing mcc-gaql ${MCC_GAQL_VERSION}..."
+echo "Installing mcc-gaql ${LATEST_TAG}..."
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
 
-curl -sL "$DOWNLOAD_URL" -o "$TEMP_DIR/mcc-gaql.tar.gz"
-tar -xzf "$TEMP_DIR/mcc-gaql.tar.gz" -C "$TEMP_DIR"
+HTTP_CODE=$(curl -sL -w "%{http_code}" "$DOWNLOAD_URL" -o "$TEMP_DIR/mcc-gaql.tar.gz")
 
-# Find and install binary
-EXTRACTED_BINARY=$(find "$TEMP_DIR" -name "mcc-gaql" -type f | head -n 1)
-if [ -z "$EXTRACTED_BINARY" ]; then
-    echo "Failed to extract mcc-gaql binary"
+if [ "$HTTP_CODE" != "200" ]; then
+    echo "Failed to download release ${LATEST_TAG} for ${OS_URL}-${ARCH}"
+    echo "URL: $DOWNLOAD_URL"
+    echo "Please install manually from: https://github.com/${REPO}/releases"
     exit 1
 fi
 
-mv "$EXTRACTED_BINARY" "$BINARY_PATH"
-chmod +x "$BINARY_PATH"
+tar -xzf "$TEMP_DIR/mcc-gaql.tar.gz" -C "$TEMP_DIR"
 
-echo "mcc-gaql installed to $BINARY_PATH"
+# Install mcc-gaql binary
+if [ -f "$TEMP_DIR/mcc-gaql" ]; then
+    mv "$TEMP_DIR/mcc-gaql" "$MCC_GAQL_PATH"
+    chmod +x "$MCC_GAQL_PATH"
+    echo "mcc-gaql installed to $MCC_GAQL_PATH"
+else
+    echo "mcc-gaql binary not found in archive"
+    exit 1
+fi
+
+# Install mcc-gaql-gen binary
+if [ -f "$TEMP_DIR/mcc-gaql-gen" ]; then
+    mv "$TEMP_DIR/mcc-gaql-gen" "$MCC_GAQL_GEN_PATH"
+    chmod +x "$MCC_GAQL_GEN_PATH"
+    echo "mcc-gaql-gen installed to $MCC_GAQL_GEN_PATH"
+else
+    echo "mcc-gaql-gen binary not found in archive"
+    exit 1
+fi
+
 echo ""
 echo "To configure Google Ads credentials, run:"
 echo "  mcc-gaql --setup"
