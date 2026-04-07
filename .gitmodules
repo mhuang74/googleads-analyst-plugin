@@ -1,2 +1,4 @@
-# Submodule removed - skill is now directly included
-# See skills/google-ads-analyst/ for the Google Ads Analyst skill
+[submodule "skills/google-ads-analyst"]
+	path = skills/google-ads-analyst
+	url = https://github.com/mhuang74/googleads-analyst-skill
+	branch = main
