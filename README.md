@@ -42,7 +42,6 @@ Once installed and configured, you can use natural language to query your Google
 ## Supported Platforms
 
 - macOS (Apple Silicon / ARM64)
-- macOS (Intel / x86_64)
 - Linux (x86_64)
 
 ## Requirements
