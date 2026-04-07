@@ -34,6 +34,25 @@ case "$OS" in
     linux)
         OS_URL="linux"
         ;;
+    msys|mingw*|cygwin)
+        echo "Windows is not officially supported for pre-built binaries."
+        echo ""
+        echo "To build mcc-gaql and mcc-gaql-gen from source on Windows:"
+        echo ""
+        echo "  1. Install Rust: https://rustup.rs/"
+        echo "  2. Clone the repository:"
+        echo "     git clone https://github.com/mhuang74/mcc-gaql-rs.git"
+        echo "  3. Build the binaries:"
+        echo "     cd mcc-gaql-rs"
+        echo "     cargo build --release"
+        echo ""
+        echo "The binaries will be available at:"
+        echo "  target/release/mcc-gaql"
+        echo "  target/release/mcc-gaql-gen"
+        echo ""
+        echo "Copy these to a directory in your PATH (e.g., ~/.cargo/bin/)."
+        exit 1
+        ;;
     *)
         echo "Unsupported OS: $OS"
         echo "Please install manually from: https://github.com/${REPO}/releases"

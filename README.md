@@ -43,6 +43,26 @@ Once installed and configured, you can use natural language to query your Google
 
 - macOS (Apple Silicon / ARM64)
 - Linux (x86_64)
+- Windows (build from source, see below)
+
+### Windows Users
+
+Pre-built binaries are not provided for Windows. To use this plugin on Windows, build from source:
+
+```bash
+# 1. Install Rust: https://rustup.rs/
+
+# 2. Clone the mcc-gaql repository
+git clone https://github.com/mhuang74/mcc-gaql-rs.git
+cd mcc-gaql-rs
+
+# 3. Build the binaries
+cargo build --release
+
+# 4. Copy binaries to your PATH
+copy target\release\mcc-gaql.exe %USERPROFILE%\.cargo\bin\
+copy target\release\mcc-gaql-gen.exe %USERPROFILE%\.cargo\bin\
+```
 
 ## Requirements
 
