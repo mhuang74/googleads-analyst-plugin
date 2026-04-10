@@ -10,6 +10,41 @@ Claude Code Plugin for Google Ads Analyst Skill - enables natural language queri
 claude plugin install https://github.com/mhuang74/googleads-analyst-plugin
 ```
 
+### Claude Code CLI on Linux
+
+For **Linux x86_64** systems using Claude Code CLI:
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/mhuang74/googleads-analyst-plugin.git
+   cd googleads-analyst-plugin
+   ```
+
+2. Run the installer script:
+   ```bash
+   bash scripts/install-mcc-gaql.sh
+   ```
+
+3. The installer will:
+   - Download `mcc-gaql` and `mcc-gaql-gen` binaries to `~/.local/bin/`
+   - Prompt for your **LLM API KEY** (required)
+   - Configure default LLM settings (synthetic.new)
+   - Download RAG resources via `mcc-gaql-gen bootstrap`
+
+4. Restart your shell or run:
+   ```bash
+   source ~/.bashrc  # or ~/.zshrc
+   ```
+
+**LLM Configuration:**
+
+The installer uses these defaults (synthetic.new):
+- `MCC_GAQL_LLM_BASE_URL`: `https://api.synthetic.new/openai/v1`
+- `MCC_GAQL_LLM_MODEL`: `hf:zai-org/GLM-4.7`
+- `MCC_GAQL_LLM_API_KEY`: **user-provided during installation**
+
+You can override the BASE_URL and MODEL during installation if you prefer a different LLM provider (e.g., OpenAI, Anthropic).
+
 ### What Gets Installed
 
 - **Skills**: Google Ads Analyst skill with reference documentation
