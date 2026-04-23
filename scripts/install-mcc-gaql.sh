@@ -58,8 +58,9 @@ DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${LATEST_TAG}/mcc-gaq
 # Check if binaries are already installed and up to date
 MCC_GAQL_PATH="$INSTALL_DIR/mcc-gaql"
 MCC_GAQL_GEN_PATH="$INSTALL_DIR/mcc-gaql-gen"
+MCC_GAQL_MUT_PATH="$INSTALL_DIR/mcc-gaql-mut"
 
-if [ -f "$MCC_GAQL_PATH" ] && [ -f "$MCC_GAQL_GEN_PATH" ]; then
+if [ -f "$MCC_GAQL_PATH" ] && [ -f "$MCC_GAQL_GEN_PATH" ] && [ -f "$MCC_GAQL_MUT_PATH" ]; then
     # Check if current version matches latest
     CURRENT_VERSION=$($MCC_GAQL_PATH --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
     if [ "$CURRENT_VERSION" = "$VERSION_NO_V" ]; then
@@ -114,6 +115,16 @@ if [ "$RUN_INSTALL" = true ]; then
         echo "mcc-gaql-gen installed to $MCC_GAQL_GEN_PATH"
     else
         echo "mcc-gaql-gen binary not found in archive"
+        exit 1
+    fi
+
+    # Install mcc-gaql-mut binary
+    if [ -f "$TEMP_DIR/mcc-gaql-mut" ]; then
+        mv "$TEMP_DIR/mcc-gaql-mut" "$MCC_GAQL_MUT_PATH"
+        chmod +x "$MCC_GAQL_MUT_PATH"
+        echo "mcc-gaql-mut installed to $MCC_GAQL_MUT_PATH"
+    else
+        echo "mcc-gaql-mut binary not found in archive"
         exit 1
     fi
 fi
@@ -224,6 +235,14 @@ if [ -x "$MCC_GAQL_GEN_PATH" ]; then
     echo "mcc-gaql-gen: $MCC_GAQL_GEN_VERSION"
 else
     echo "Error: mcc-gaql-gen not found or not executable at $MCC_GAQL_GEN_PATH"
+    exit 1
+fi
+
+if [ -x "$MCC_GAQL_MUT_PATH" ]; then
+    MCC_GAQL_MUT_VERSION=$($MCC_GAQL_MUT_PATH --version 2>/dev/null | head -1 || echo "unknown")
+    echo "mcc-gaql-mut: $MCC_GAQL_MUT_VERSION"
+else
+    echo "Error: mcc-gaql-mut not found or not executable at $MCC_GAQL_MUT_PATH"
     exit 1
 fi
 

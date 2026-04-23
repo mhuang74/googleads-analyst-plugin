@@ -26,7 +26,7 @@ For **Linux x86_64** systems using Claude Code CLI:
    ```
 
 3. The installer will:
-   - Download `mcc-gaql` and `mcc-gaql-gen` binaries to `~/.local/bin/`
+   - Download `mcc-gaql`, `mcc-gaql-gen`, and `mcc-gaql-mut` binaries to `~/.local/bin/`
    - Prompt for your **LLM API KEY** (required)
    - Configure default LLM settings (synthetic.new)
    - Download RAG resources via `mcc-gaql-gen bootstrap`
@@ -49,7 +49,7 @@ You can override the BASE_URL and MODEL during installation if you prefer a diff
 
 - **Skills**: Google Ads Analyst skill with reference documentation
 - **Hooks**: SessionStart hook that automatically installs the `mcc-gaql` and `mcc-gaql-gen` binaries
-- **Binaries**: Latest release of `mcc-gaql` and `mcc-gaql-gen` (downloaded to `~/.local/bin/`)
+- **Binaries**: Latest release of `mcc-gaql`, `mcc-gaql-gen`, and `mcc-gaql-mut` (downloaded to `~/.local/bin/`)
 
 ## Setup
 
@@ -73,6 +73,7 @@ Once installed and configured, you can use natural language to query your Google
 
 - **`mcc-gaql`**: Execute GAQL queries and validate query syntax
 - **`mcc-gaql-gen`**: Generate GAQL from natural language prompts
+- **`mcc-gaql-mut`**: Apply campaign setting changes (pause/enable, budget, bidding targets, name)
 
 ## Supported Platforms
 
@@ -97,6 +98,7 @@ cargo build --release
 # 4. Copy binaries to your PATH
 copy target\release\mcc-gaql.exe %USERPROFILE%\.cargo\bin\
 copy target\release\mcc-gaql-gen.exe %USERPROFILE%\.cargo\bin\
+copy target\release\mcc-gaql-mut.exe %USERPROFILE%\.cargo\bin\
 ```
 
 ## Requirements

@@ -21,6 +21,7 @@ The user wants to install the `mcc-gaql` and `mcc-gaql-gen` tools on Claude Desk
 **Tools**:
 - `mcc-gaql`: GAQL query execution tool (48MB)
 - `mcc-gaql-gen`: Natural language to GAQL generation using LLM + RAG (245MB)
+- `mcc-gaql-mut`: Apply approved campaign setting changes (status, name, budget, bidding targets)
 
 **Current LLM config**: Uses `zai-org/glm-4.7` via `https://nano-gpt.com/api/v1`
 
@@ -60,7 +61,7 @@ The user wants to install the `mcc-gaql` and `mcc-gaql-gen` tools on Claude Desk
 
 4. **Configuration Verification** (NEW):
    - Verify binaries are in PATH
-   - Test `mcc-gaql --version` and `mcc-gaql-gen --version`
+   - Test `mcc-gaql --version`, `mcc-gaql-gen --version`, and `mcc-gaql-mut --version`
    - Verify bootstrap completed (check `~/.config/mcc-gaql/lancedb/` exists)
 
 ### Phase 2: Create Claude Desktop Plugin Manifest
@@ -111,7 +112,7 @@ export MCC_GAQL_LOG_LEVEL="info"
 ## Verification Steps
 
 1. Run installer: `bash scripts/install-mcc-gaql.sh`
-2. Verify binaries: `mcc-gaql --version` and `mcc-gaql-gen --version`
+2. Verify binaries: `mcc-gaql --version`, `mcc-gaql-gen --version`, and `mcc-gaql-mut --version`
 3. Verify bootstrap: `ls ~/.config/mcc-gaql/lancedb/`
 4. Test GAQL generation: `mcc-gaql-gen generate "show campaign performance" --explain`
 5. Verify LLM config in output shows synthetic.new endpoint
@@ -119,7 +120,7 @@ export MCC_GAQL_LOG_LEVEL="info"
 ## Rollback Plan
 
 If installation fails:
-1. Remove binaries: `rm ~/.local/bin/mcc-gaql ~/.local/bin/mcc-gaql-gen`
+1. Remove binaries: `rm ~/.local/bin/mcc-gaql ~/.local/bin/mcc-gaql-gen ~/.local/bin/mcc-gaql-mut`
 2. Remove config: `rm -rf ~/.config/mcc-gaql/ ~/.cache/mcc-gaql/`
 3. Remove env vars from shell profile
 4. Re-run installer after fixing issue
